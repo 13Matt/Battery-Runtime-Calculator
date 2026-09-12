@@ -2,80 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>12V Battery Runtime & Off-Grid Power Calculator</title>
-  <meta name="description" content="Calculate real-world 12V battery runtime across LiFePO4, AGM, and Lead-Acid setups with inverter losses, duty cycles, and solar break-even." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>12V Battery Runtime Calculator</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card-bg: #1e293b;
+      --bg: #0b1329;
+      --card: #1e293b;
+      --input-bg: #0f172a;
       --border: #334155;
       --primary: #38bdf8;
-      --primary-hover: #0284c7;
       --accent: #22c55e;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --danger: #ef4444;
-      --radius: 10px;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       background-color: var(--bg);
       color: var(--text);
-      line-height: 1.5;
-      padding: 16px 12px;
+      padding: 14px;
       display: flex;
       justify-content: center;
     }
 
     .container {
       width: 100%;
-      max-width: 960px;
+      max-width: 600px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
 
     header {
       text-align: center;
-      padding: 6px 0;
+      padding: 8px 0;
     }
 
     header h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
+      font-size: 1.4rem;
       color: #fff;
-      margin-bottom: 4px;
     }
 
     header p {
       color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    @media (min-width: 768px) {
-      .grid {
-        grid-template-columns: 1.15fr 0.85fr;
-      }
+      font-size: 0.85rem;
+      margin-top: 4px;
     }
 
     .card {
-      background: var(--card-bg);
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: 12px;
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -83,156 +68,145 @@
     }
 
     .card-title {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--primary);
       border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
     }
 
-    .field-group {
+    .field {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 4px;
     }
 
     label {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       font-weight: 500;
     }
 
-    /* 16px font-size prevents iOS Safari from zooming or misaligning touch focus */
+    /* 16px prevents iOS Safari auto-zoom and input lock */
     input, select {
-      background: #0f172a;
+      background: var(--input-bg);
       border: 1px solid var(--border);
-      color: var(--text);
-      padding: 10px 8px;
-      border-radius: 6px;
+      color: #fff;
+      padding: 12px;
+      border-radius: 8px;
       font-size: 16px;
-      outline: none;
       width: 100%;
-      min-width: 0;
+      outline: none;
     }
 
     input:focus, select:focus {
       border-color: var(--primary);
     }
 
-    .appliance-header {
-      display: grid;
-      grid-template-columns: 1.3fr 0.9fr 1.1fr 28px;
-      gap: 6px;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 0 4px;
-    }
-
-    .appliance-row {
-      display: grid;
-      grid-template-columns: 1.3fr 0.9fr 1.1fr 28px;
-      gap: 6px;
-      align-items: center;
-      background: #151f32;
-      padding: 8px 6px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-    }
-
-    .btn-remove {
-      background: none;
-      border: none;
-      color: var(--danger);
-      font-size: 1.4rem;
-      cursor: pointer;
-      line-height: 1;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn-add {
-      background: transparent;
-      border: 1px dashed var(--primary);
-      color: var(--primary);
-      padding: 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.2s;
-    }
-
-    .btn-add:hover {
-      background: rgba(56, 189, 248, 0.1);
-    }
-
-    /* Results Dashboard */
-    .stat-box {
-      background: #111a2c;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px;
-      text-align: center;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .stat-value {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-top: 4px;
-    }
-
-    .stat-sub {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .stats-summary {
+    .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
 
-    .battery-visual-container {
-      background: #111a2c;
+    /* Stacked Appliance Card Design for Mobile */
+    .appliance-item {
+      background: #131f37;
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 12px;
-      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
     }
 
-    .progress-bar-bg {
-      background: #243048;
-      height: 14px;
-      border-radius: 7px;
-      overflow: hidden;
-      margin-top: 6px;
+    .appliance-top {
+      display: flex;
+      gap: 8px;
+      align-items: center;
     }
 
-    .progress-bar-fill {
-      background: var(--accent);
-      height: 100%;
-      width: 90%;
-      transition: width 0.3s ease;
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger);
+      color: var(--danger);
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
     }
 
-    .disclaimer {
-      font-size: 0.72rem;
-      color: var(--text-muted);
+    .btn-add {
+      background: transparent;
+      border: 2px dashed var(--primary);
+      color: var(--primary);
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
       text-align: center;
+    }
+
+    /* Results */
+    .hero-stat {
+      background: #0f1c33;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .hero-val {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent);
       margin-top: 4px;
+    }
+
+    .hero-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .mini-stat {
+      background: #0f1c33;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .mini-stat .val {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    .mini-stat .lbl {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .solar-box {
+      background: #0f2744;
+      border: 1px solid var(--primary);
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: #e2e8f0;
     }
   </style>
 </head>
@@ -240,116 +214,113 @@
 
   <div class="container">
     <header>
-      <h1>12V Battery Runtime Calculator</h1>
-      <p>Estimate true battery endurance and solar recharge needs</p>
+      <h1>12V Battery Runtime Tool</h1>
+      <p>Instant off-grid battery endurance & solar sizing</p>
     </header>
 
-    <div class="grid">
-      <!-- INPUT COLUMN -->
-      <div class="card">
-        <h2 class="card-title">1. Battery Bank Setup</h2>
-        
-        <div class="field-group">
-          <label for="chem">Battery Chemistry</label>
-          <select id="chem">
-            <option value="0.90" selected>LiFePO4 Lithium (90% usable)</option>
-            <option value="0.50">AGM / Deep Cycle (50% usable)</option>
-            <option value="0.80">Gel Battery (80% usable)</option>
-          </select>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-          <div class="field-group">
-            <label for="capacity">Capacity (Ah)</label>
-            <input type="number" id="capacity" value="100" min="1" step="5" inputmode="numeric" />
-          </div>
-          <div class="field-group">
-            <label for="inverterEff">Inverter Eff. (%)</label>
-            <input type="number" id="inverterEff" value="88" min="70" max="100" inputmode="numeric" />
-          </div>
-        </div>
-
-        <h2 class="card-title" style="margin-top: 6px;">2. Active Loads & Appliances</h2>
-        
-        <div class="appliance-header">
-          <span>Appliance</span>
-          <span>Watts (W)</span>
-          <span>Duty Cycle</span>
-          <span></span>
-        </div>
-
-        <div id="appliances-container" style="display: flex; flex-direction: column; gap: 8px;">
-          <!-- Row 1: 12V Fridge -->
-          <div class="appliance-row">
-            <input type="text" value="12V Fridge" placeholder="Name" class="app-name" />
-            <input type="number" value="45" placeholder="Watts" class="app-watts" inputmode="numeric" />
-            <select class="app-duty">
-              <option value="0.35" selected>Cycle (35%)</option>
-              <option value="0.50">Heavy (50%)</option>
-              <option value="1.0">100% On</option>
-            </select>
-            <button type="button" class="btn-remove" onclick="removeRow(this)">&times;</button>
-          </div>
-
-          <!-- Row 2: Phone / USB -->
-          <div class="appliance-row">
-            <input type="text" value="Phone / USB" placeholder="Name" class="app-name" />
-            <input type="number" value="18" placeholder="Watts" class="app-watts" inputmode="numeric" />
-            <select class="app-duty">
-              <option value="0.25">Short (25%)</option>
-              <option value="0.50" selected>Half-Day (50%)</option>
-              <option value="1.0">100% On</option>
-            </select>
-            <button type="button" class="btn-remove" onclick="removeRow(this)">&times;</button>
-          </div>
-        </div>
-
-        <button type="button" class="btn-add" onclick="addApplianceRow()">+ Add Another Appliance</button>
+    <!-- 1. BATTERY SETUP -->
+    <div class="card">
+      <div class="card-title">1. Battery Setup</div>
+      
+      <div class="field">
+        <label>Battery Chemistry</label>
+        <select id="chem">
+          <option value="0.90" selected>LiFePO4 Lithium (90% usable)</option>
+          <option value="0.50">AGM / Deep Cycle (50% usable)</option>
+          <option value="0.80">Gel Battery (80% usable)</option>
+        </select>
       </div>
 
-      <!-- OUTPUT COLUMN -->
-      <div class="card">
-        <h2 class="card-title">Run-Time Projection</h2>
+      <div class="grid-2">
+        <div class="field">
+          <label>Capacity (Amp Hours)</label>
+          <input type="number" id="capacity" value="100" inputmode="numeric" />
+        </div>
+        <div class="field">
+          <label>Inverter Eff. (%)</label>
+          <input type="number" id="inverterEff" value="88" inputmode="numeric" />
+        </div>
+      </div>
+    </div>
 
-        <div class="stat-box">
-          <div class="stat-label">Estimated Continuous Runtime</div>
-          <div class="stat-value" id="runtime-display">-- hrs</div>
-          <div class="stat-sub" id="days-display">-- days</div>
+    <!-- 2. APPLIANCES -->
+    <div class="card">
+      <div class="card-title">2. Connected Loads</div>
+      
+      <div id="appliances-container" style="display:flex; flex-direction:column; gap:12px;">
+        
+        <!-- Default Item 1 -->
+        <div class="appliance-item">
+          <div class="appliance-top">
+            <input type="text" value="12V Fridge" placeholder="Appliance name" class="app-name" />
+            <button type="button" class="btn-delete" onclick="removeRow(this)">Delete</button>
+          </div>
+          <div class="grid-2">
+            <div class="field">
+              <label>Power Draw (Watts)</label>
+              <input type="number" value="45" class="app-watts" inputmode="numeric" />
+            </div>
+            <div class="field">
+              <label>Run Profile</label>
+              <select class="app-duty">
+                <option value="0.35" selected>Cycling (35%)</option>
+                <option value="0.50">Heavy (50%)</option>
+                <option value="1.0">Always On (100%)</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div class="stats-summary">
-          <div class="stat-box">
-            <div class="stat-label">Usable Energy</div>
-            <div class="stat-value" style="font-size: 1.25rem;" id="usable-wh">-- Wh</div>
-            <div class="stat-sub" id="usable-ah">-- Ah</div>
+        <!-- Default Item 2 -->
+        <div class="appliance-item">
+          <div class="appliance-top">
+            <input type="text" value="Phone / USB Charging" placeholder="Appliance name" class="app-name" />
+            <button type="button" class="btn-delete" onclick="removeRow(this)">Delete</button>
           </div>
-          <div class="stat-box">
-            <div class="stat-label">Avg Continuous Draw</div>
-            <div class="stat-value" style="font-size: 1.25rem;" id="avg-watts">-- W</div>
-            <div class="stat-sub" id="avg-amps">-- A @ 12V</div>
+          <div class="grid-2">
+            <div class="field">
+              <label>Power Draw (Watts)</label>
+              <input type="number" value="18" class="app-watts" inputmode="numeric" />
+            </div>
+            <div class="field">
+              <label>Run Profile</label>
+              <select class="app-duty">
+                <option value="0.25">Short (25%)</option>
+                <option value="0.50" selected>Half-Day (50%)</option>
+                <option value="1.0">Always On (100%)</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <div class="battery-visual-container">
-          <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
-            <span>Safe Usable Window</span>
-            <span id="dod-percent-display">90% DoD</span>
-          </div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="dod-bar"></div>
-          </div>
-        </div>
+      </div>
 
-        <div class="stat-box" style="text-align: left; background: #132238;">
-          <div class="stat-label" style="color: var(--primary);">Solar Break-Even Recommendation</div>
-          <p style="font-size: 0.88rem; margin-top: 6px; color: #cbd5e1;" id="solar-advice">
-            To stay off-grid indefinitely under average sunshine (4.5 peak sun hours), you will need a minimum of <strong>-- W</strong> of solar input.
-          </p>
-        </div>
+      <button type="button" class="btn-add" onclick="addApplianceRow()">+ Add Another Appliance</button>
+    </div>
 
-        <p class="disclaimer">
-          Calculations assume nominal 12.8V resting profile. Inverter losses are factored into wattage pulls.
-        </p>
+    <!-- 3. RESULTS -->
+    <div class="card">
+      <div class="card-title">3. Estimated Runtime</div>
+
+      <div class="hero-stat">
+        <div class="hero-sub" style="text-transform: uppercase;">Continuous Runtime</div>
+        <div class="hero-val" id="runtime-display">-- hrs</div>
+        <div class="hero-sub" id="days-display" style="margin-top: 4px;">--</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="mini-stat">
+          <div class="lbl">Usable Energy</div>
+          <div class="val" id="usable-wh">-- Wh</div>
+        </div>
+        <div class="mini-stat">
+          <div class="lbl">Avg Current Draw</div>
+          <div class="val" id="avg-amps">-- A</div>
+        </div>
+      </div>
+
+      <div class="solar-box" id="solar-advice">
+        Enter loads above to see solar panel recommendations.
       </div>
     </div>
   </div>
@@ -363,54 +334,58 @@
 
       const totalWh = capacityAh * nominalVoltage;
       const usableWh = totalWh * chemDod;
-      const usableAh = capacityAh * chemDod;
-
-      document.getElementById('dod-percent-display').textContent = `${Math.round(chemDod * 100)}% DoD Limit`;
-      document.getElementById('dod-bar').style.width = `${chemDod * 100}%`;
 
       let totalAverageWatts = 0;
-      const rows = document.querySelectorAll('.appliance-row');
+      const rows = document.querySelectorAll('.appliance-item');
 
       rows.forEach(row => {
         const watts = parseFloat(row.querySelector('.app-watts').value) || 0;
         const duty = parseFloat(row.querySelector('.app-duty').value) || 1.0;
-        totalAverageWatts += watts * duty;
+        totalAverageWatts += (watts * duty);
       });
 
-      const adjustedContinuousWatts = totalAverageWatts / inverterEff;
-      const averageAmps = adjustedContinuousWatts / nominalVoltage;
+      const adjustedWatts = totalAverageWatts / inverterEff;
+      const averageAmps = adjustedWatts / nominalVoltage;
 
-      const runtimeHours = adjustedContinuousWatts > 0 ? (usableWh / adjustedContinuousWatts) : 0;
+      const runtimeHours = adjustedWatts > 0 ? (usableWh / adjustedWatts) : 0;
       const runtimeDays = runtimeHours / 24;
 
       document.getElementById('runtime-display').textContent = runtimeHours > 0 ? `${runtimeHours.toFixed(1)} hrs` : '∞ hrs';
-      document.getElementById('days-display').textContent = runtimeHours > 0 ? `(~${runtimeDays.toFixed(1)} days of power)` : 'No active load';
+      document.getElementById('days-display').textContent = runtimeHours > 0 ? `(~${runtimeDays.toFixed(1)} days off-grid)` : 'No active load entered';
       document.getElementById('usable-wh').textContent = `${Math.round(usableWh)} Wh`;
-      document.getElementById('usable-ah').textContent = `${Math.round(usableAh)} Ah`;
-      document.getElementById('avg-watts').textContent = `${adjustedContinuousWatts.toFixed(1)} W`;
-      document.getElementById('avg-amps').textContent = `${averageAmps.toFixed(2)} A @ 12V`;
+      document.getElementById('avg-amps').textContent = `${averageAmps.toFixed(1)} A @ 12V`;
 
-      const dailyWh = adjustedContinuousWatts * 24;
+      const dailyWh = adjustedWatts * 24;
       const requiredSolarWatts = Math.round(dailyWh / (4.5 * 0.75));
 
-      document.getElementById('solar-advice').innerHTML = adjustedContinuousWatts > 0
-        ? `To run this setup indefinitely with 4.5 peak sun hours/day, you need approximately <strong>${requiredSolarWatts}W</strong> of solar panels to replenish the daily <strong>${Math.round(dailyWh)} Wh</strong> consumption.`
-        : `Add an appliance load above to generate solar panel sizing recommendations.`;
+      document.getElementById('solar-advice').innerHTML = adjustedWatts > 0
+        ? `To run this setup indefinitely with 4.5 peak sun hours/day, you need roughly <strong>${requiredSolarWatts}W</strong> of solar panels to replace the daily <strong>${Math.round(dailyWh)} Wh</strong> draw.`
+        : `Enter appliance loads above to calculate runtime and solar requirements.`;
     }
 
     function addApplianceRow() {
       const container = document.getElementById('appliances-container');
       const div = document.createElement('div');
-      div.className = 'appliance-row';
+      div.className = 'appliance-item';
       div.innerHTML = `
-        <input type="text" placeholder="Custom Device" class="app-name" />
-        <input type="number" placeholder="Watts" value="30" class="app-watts" inputmode="numeric" />
-        <select class="app-duty">
-          <option value="0.25">Short (25%)</option>
-          <option value="0.50">Half-Day (50%)</option>
-          <option value="1.0" selected>100% On</option>
-        </select>
-        <button type="button" class="btn-remove" onclick="removeRow(this)">&times;</button>
+        <div class="appliance-top">
+          <input type="text" placeholder="Device name" class="app-name" />
+          <button type="button" class="btn-delete" onclick="removeRow(this)">Delete</button>
+        </div>
+        <div class="grid-2">
+          <div class="field">
+            <label>Power Draw (Watts)</label>
+            <input type="number" value="30" class="app-watts" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label>Run Profile</label>
+            <select class="app-duty">
+              <option value="0.25">Short (25%)</option>
+              <option value="0.50">Half-Day (50%)</option>
+              <option value="1.0" selected>Always On (100%)</option>
+            </select>
+          </div>
+        </div>
       `;
       container.appendChild(div);
       attachListeners();
@@ -418,7 +393,7 @@
     }
 
     function removeRow(btn) {
-      btn.closest('.appliance-row').remove();
+      btn.closest('.appliance-item').remove();
       calculate();
     }
 
