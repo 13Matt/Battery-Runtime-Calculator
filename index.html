@@ -88,7 +88,7 @@
       font-weight: 500;
     }
 
-    /* 16px font-size stops iOS auto-zoom and input freezes */
+    /* 16px font-size stops iOS auto-zoom */
     input, select {
       background: var(--input-bg);
       border: 1px solid var(--border);
@@ -108,6 +108,50 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
+    }
+
+    /* Preset Horizontal Scroll */
+    .preset-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .preset-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .preset-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .btn-preset {
+      background: #152238;
+      border: 1px solid var(--border);
+      color: var(--primary);
+      padding: 7px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-preset:active {
+      background: var(--primary);
+      color: #0b1329;
+      border-color: var(--primary);
     }
 
     .appliance-item {
@@ -151,7 +195,7 @@
       text-align: center;
     }
 
-    /* Results */
+    /* Results Dashboard */
     .hero-stat {
       background: #0f1c33;
       border: 1px solid var(--border);
@@ -208,7 +252,7 @@
       color: #e2e8f0;
     }
 
-    /* Affiliate Product Links */
+    /* Gear Recommendation Styles */
     .gear-card {
       display: flex;
       flex-direction: column;
@@ -223,7 +267,6 @@
       padding: 12px;
       border-radius: 8px;
       text-decoration: none;
-      transition: border-color 0.2s;
     }
 
     .gear-link:active {
@@ -261,7 +304,7 @@
 
     <!-- 1. BATTERY SETUP -->
     <div class="card">
-      <div class="card-title">1. Battery Setup</div>
+      <div class="card-title">1. Battery Bank Setup</div>
       
       <div class="field">
         <label>Battery Chemistry</label>
@@ -284,9 +327,23 @@
       </div>
     </div>
 
-    <!-- 2. APPLIANCES -->
+    <!-- 2. APPLIANCES WITH PRESETS -->
     <div class="card">
       <div class="card-title">2. Connected Loads</div>
+
+      <!-- Quick Preset Buttons (4WD & Touring Gear) -->
+      <div style="display:flex; flex-direction:column; gap:6px;">
+        <span class="preset-label">Quick Add Presets:</span>
+        <div class="preset-scroll">
+          <button type="button" class="btn-preset" onclick="addPreset('Diesel Heater', 35, 0.40)">+ Diesel Heater</button>
+          <button type="button" class="btn-preset" onclick="addPreset('Starlink Mini', 25, 1.0)">+ Starlink Mini</button>
+          <button type="button" class="btn-preset" onclick="addPreset('12V Travel Oven', 130, 0.25)">+ 12V Travel Oven</button>
+          <button type="button" class="btn-preset" onclick="addPreset('Sirocco 12V Fan', 5, 0.50)">+ Sirocco Fan</button>
+          <button type="button" class="btn-preset" onclick="addPreset('12V Water Pump', 60, 0.05)">+ Water Pump</button>
+          <button type="button" class="btn-preset" onclick="addPreset('Canopy / Camp Lights', 20, 0.25)">+ Camp Lights</button>
+          <button type="button" class="btn-preset" onclick="addPreset('Induction / Coffee', 1500, 0.05)">+ Induction / Coffee</button>
+        </div>
+      </div>
       
       <div id="appliances-container" style="display:flex; flex-direction:column; gap:12px;">
         <!-- Default Item 1: 12V Camping Fridge -->
@@ -303,7 +360,10 @@
             <div class="field">
               <label>Run Profile</label>
               <select class="app-duty">
+                <option value="0.05">Occasional (5%)</option>
+                <option value="0.25">Short (25%)</option>
                 <option value="0.35" selected>Cycling (35%)</option>
+                <option value="0.40">Eco Run (40%)</option>
                 <option value="0.50">Heavy (50%)</option>
                 <option value="1.0">Always On (100%)</option>
               </select>
@@ -325,7 +385,10 @@
             <div class="field">
               <label>Run Profile</label>
               <select class="app-duty">
+                <option value="0.05">Occasional (5%)</option>
                 <option value="0.25">Short (25%)</option>
+                <option value="0.35">Cycling (35%)</option>
+                <option value="0.40">Eco Run (40%)</option>
                 <option value="0.50" selected>Half-Day (50%)</option>
                 <option value="1.0">Always On (100%)</option>
               </select>
@@ -334,7 +397,7 @@
         </div>
       </div>
 
-      <button type="button" class="btn-add" onclick="addApplianceRow()">+ Add Another Appliance</button>
+      <button type="button" class="btn-add" onclick="addApplianceRow()">+ Add Custom Appliance</button>
     </div>
 
     <!-- 3. RESULTS -->
@@ -363,7 +426,7 @@
       </div>
     </div>
 
-    <!-- 4. RECOMMENDED GEAR (MONETIZATION) -->
+    <!-- 4. RECOMMENDED GEAR (AFFILIATE MONETIZATION) -->
     <div class="card" style="border-color: var(--primary);">
       <div class="card-title">Recommended Off-Grid Gear</div>
       <p style="font-size: 0.85rem; color: var(--text-muted);">
@@ -383,88 +446,61 @@
 
         <a href="https://www.amazon.com.au/s?k=pure+sine+wave+inverter+12v+1000w&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
           <div class="gear-title">&rarr; Pure Sine Wave Inverters (1000W–2000W)</div>
-          <div class="gear-desc">Safe power for camping fridges, CPAP, laptops, and chargers.</div>
+          <div class="gear-desc">Safe power for camping fridges, laptops, travel ovens, and chargers.</div>
         </a>
       </div>
     </div>
 
-    <!-- EXPANDABLE FAQ & KNOWLEDGE HUB (OPTIMIZED FOR SEO) -->
-    <div class="card" style="margin-top: 6px;">
+    <!-- 5. FAQ & SEO GUIDE -->
+    <div class="card">
       <div class="card-title">Frequently Asked Questions & 12V Sizing Guide</div>
       
       <div style="display: flex; flex-direction: column; gap: 8px;">
-
         <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
           <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
             <span>How long will a 100Ah lithium battery run a 12V camping fridge?</span>
             <span style="color: var(--primary); font-size: 1.1rem;">+</span>
           </summary>
           <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            Under standard ambient temperatures (20°C to 28°C), a typical 40L to 65L single-zone camping fridge (like an Engel, Dometic, or Bushman) draws around 40W to 50W while the compressor is actively running. Because modern fridges cycle on and off (roughly a 35% to 40% duty cycle once down to temperature), the average draw is about 15W to 18W (1.2A to 1.4A at 12.8V).<br><br>
-            On a 100Ah LiFePO4 battery (providing roughly 90Ah or ~1,150Wh of usable power), you can expect between <strong>60 and 75 hours of continuous runtime</strong> (around 2.5 to 3 full days) without any solar or alternator recharge.
+            Under standard ambient temperatures (20°C to 28°C), a typical 40L to 65L single-zone camping fridge draws around 40W to 50W while cooling. Because modern fridges cycle on and off (roughly a 35% to 40% duty cycle once down to temperature), the average draw is about 15W to 18W (1.2A to 1.4A at 12.8V).<br><br>
+            On a 100Ah LiFePO4 battery (providing roughly 90Ah or ~1,150Wh of usable power), you can expect between <strong>60 and 75 hours of continuous runtime</strong> (around 2.5 to 3 full days) without solar or alternator charging.
           </p>
         </details>
 
         <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
           <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-            <span>What is the real difference between AGM and LiFePO4 (Lithium) capacity?</span>
+            <span>What is the difference between AGM and LiFePO4 usable capacity?</span>
             <span style="color: var(--primary); font-size: 1.1rem;">+</span>
           </summary>
           <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            The biggest trap in 12V sizing is assuming a rated 100Ah battery gives you 100Ah of power. 
-            <br><br>
-            • <strong>AGM / Lead-Acid:</strong> Should not be discharged beyond 50% Depth of Discharge (DoD) without significantly shortening cell lifespan and causing severe voltage sag under load. A 100Ah AGM only gives you <strong>50Ah of safe usable capacity</strong>.
-            <br>
-            • <strong>LiFePO4 Lithium:</strong> Can easily be discharged down to 10% remaining capacity (90% DoD) for 3,000+ cycles while maintaining a rock-steady 12.8V to 13.0V output. A 100Ah lithium battery delivers <strong>90Ah of real-world energy</strong>—almost double the usable power of an AGM battery half its weight.
+            • <strong>AGM / Lead-Acid:</strong> Should not be discharged below 50% Depth of Discharge (DoD) without damaging cell life and causing voltage sag. A 100Ah AGM only delivers <strong>50Ah usable capacity</strong>.<br>
+            • <strong>LiFePO4 Lithium:</strong> Safely discharges to 10% remaining capacity (90% DoD) for thousands of cycles while maintaining steady 12.8V output. A 100Ah lithium battery delivers <strong>90Ah of usable power</strong>.
           </p>
         </details>
 
         <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
           <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-            <span>How many watts of solar do I need to keep my 12V battery topped up?</span>
+            <span>How much solar do I need to stay off-grid indefinitely?</span>
             <span style="color: var(--primary); font-size: 1.1rem;">+</span>
           </summary>
           <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            To calculate solar break-even, multiply your continuous hourly load by 24 hours to find your daily energy demand in watt-hours (Wh). 
-            <br><br>
-            Most sunny regions receive an average of <strong>4.5 Peak Sun Hours</strong> per day. After accounting for real-world losses (heat de-rating on solar cells, dust, panel angle, and MPPT controller efficiency—typically around 25% loss), use this rule of thumb:
-            <br><br>
-            <strong>Required Solar Watts = Daily Wh Demand ÷ (4.5 × 0.75)</strong>
-            <br><br>
-            For example, running a fridge, canopy camp lights, and phone charging (averaging 30W continuous = 720Wh/day) requires roughly a <strong>200W to 250W solar panel or folding blanket</strong> to break even off-grid indefinitely.
+            Multiply your daily continuous draw by 24 hours to find daily Wh. Divide that by (4.5 peak sun hours × 0.75 efficiency). A typical 30W continuous load draws 720Wh/day, requiring approximately a <strong>200W to 250W solar blanket or panel</strong> to break even.
           </p>
         </details>
 
         <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
           <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-            <span>How much power does an inverter waste running 240V / 110V gear?</span>
+            <span>How much power does an inverter waste?</span>
             <span style="color: var(--primary); font-size: 1.1rem;">+</span>
           </summary>
           <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            Inverters convert 12V direct current into mains alternating current, but they are not 100% efficient. Quality pure sine wave inverters operate at roughly <strong>85% to 92% efficiency</strong> under normal loads. 
-            <br><br>
-            Additionally, all inverters draw an <strong>idle / tare current</strong> simply being turned on (typically 0.8A to 1.5A, or 10W to 20W). If you leave a 2,000W inverter switched on overnight without running any appliances, it will still burn roughly 15Ah to 20Ah of battery capacity just sitting on standby. Whenever possible, run devices directly from native 12V cigarette/Anderson sockets or dedicated USB-C PD outlets.
+            Pure sine wave inverters run at 85% to 92% efficiency. Idle inverters also draw 0.8A to 1.5A (10W to 20W) simply being turned on, which burns roughly 15Ah to 20Ah of battery capacity overnight if left switched on.
           </p>
         </details>
-
-        <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
-          <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
-            <span>Can a 100Ah battery run an induction cooktop, kettle, or coffee machine?</span>
-            <span style="color: var(--primary); font-size: 1.1rem;">+</span>
-          </summary>
-          <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            Yes, but with two important conditions:
-            <br><br>
-            1. <strong>BMS Discharge Rating:</strong> A single standard 100Ah lithium battery usually has a 100A continuous Battery Management System (BMS), meaning it can safely deliver a maximum of roughly 1,200W ($12\text{V} \times 100\text{A}$). An 1,800W induction cooktop or kettle requires a <strong>200A BMS</strong> (or two 100Ah batteries wired in parallel).
-            <br>
-            2. <strong>Short Bursts Only:</strong> High-wattage heating appliances draw huge instantaneous current (~150A), but run for short periods. Boiling a kettle for 3 minutes uses only around 7Ah to 9Ah of capacity.
-          </p>
-        </details>
-
       </div>
     </div>
 
-    <!-- GOOGLE STRUCTURED DATA (JSON-LD FAQ SCHEMA) -->
+    <!-- GOOGLE STRUCTURED DATA SCHEMA -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -475,7 +511,7 @@
           "name": "How long will a 100Ah lithium battery run a 12V camping fridge?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "A standard 40L to 65L camping fridge draws about 15W to 18W on average once cycling (1.2A to 1.4A at 12.8V). On a 100Ah LiFePO4 battery (providing ~90Ah safe usable capacity), it will run continuously for 60 to 75 hours (roughly 2.5 to 3 days) without recharging."
+            "text": "A standard 40L to 65L camping fridge draws about 15W to 18W on average once cycling. On a 100Ah LiFePO4 battery (providing ~90Ah usable capacity), it will run for 60 to 75 hours continuously without recharging."
           }
         },
         {
@@ -483,31 +519,14 @@
           "name": "What is the difference between AGM and LiFePO4 usable capacity?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "AGM and deep-cycle lead-acid batteries can only be safely discharged to 50% Depth of Discharge, providing only 50Ah of usable energy from a 100Ah battery. LiFePO4 lithium batteries can be discharged to 90% Depth of Discharge, delivering 90Ah of usable energy without cell damage or voltage drop."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How many watts of solar do I need to keep a 12V battery charged?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Multiply daily watt-hour demand by 24 hours, then divide by (4.5 peak sun hours x 0.75 efficiency). A setup pulling an average of 30W continuous (720Wh/day) requires approximately a 200W to 250W solar panel or folding blanket to break even off-grid."
-          }
-        },
-        {
-          "@type": "Question",
-          "name": "How much power does an inverter waste running 240V gear?",
-          "acceptedAnswer": {
-            "@type": "Answer",
-            "text": "Pure sine wave inverters operate at roughly 85% to 92% efficiency under load. In addition, an idle inverter consumes 0.8A to 1.5A (10W to 20W) simply being turned on, which can drain 15Ah to 20Ah overnight if left on standby."
+            "text": "AGM batteries can only be safely discharged to 50% Depth of Discharge (50Ah usable from a 100Ah battery). LiFePO4 lithium batteries can be discharged to 90% DoD, delivering 90Ah of real-world energy."
           }
         }
       ]
     }
     </script>
 
-    
-    <!-- COMPLIANCE FOOTER REQUIRED BY AMAZON -->
+    <!-- COMPLIANCE FOOTER -->
     <footer>
       12vruntime.com is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.
     </footer>
@@ -551,26 +570,29 @@
         : `Enter appliance loads above to calculate runtime and solar requirements.`;
     }
 
-    function addApplianceRow() {
+    function addPreset(name, watts, duty) {
       const container = document.getElementById('appliances-container');
       const div = document.createElement('div');
       div.className = 'appliance-item';
       div.innerHTML = `
         <div class="appliance-top">
-          <input type="text" placeholder="Device name" class="app-name" />
+          <input type="text" value="${name}" class="app-name" />
           <button type="button" class="btn-delete" onclick="removeRow(this)">Delete</button>
         </div>
         <div class="grid-2">
           <div class="field">
             <label>Power Draw (Watts)</label>
-            <input type="number" value="30" class="app-watts" inputmode="numeric" />
+            <input type="number" value="${watts}" class="app-watts" inputmode="numeric" />
           </div>
           <div class="field">
             <label>Run Profile</label>
             <select class="app-duty">
-              <option value="0.25">Short (25%)</option>
-              <option value="0.50">Half-Day (50%)</option>
-              <option value="1.0" selected>Always On (100%)</option>
+              <option value="0.05" ${duty === 0.05 ? 'selected' : ''}>Occasional (5%)</option>
+              <option value="0.25" ${duty === 0.25 ? 'selected' : ''}>Short (25%)</option>
+              <option value="0.35" ${duty === 0.35 ? 'selected' : ''}>Cycling (35%)</option>
+              <option value="0.40" ${duty === 0.40 ? 'selected' : ''}>Eco Run (40%)</option>
+              <option value="0.50" ${duty === 0.50 ? 'selected' : ''}>Half-Day (50%)</option>
+              <option value="1.0" ${duty === 1.0 ? 'selected' : ''}>Always On (100%)</option>
             </select>
           </div>
         </div>
@@ -578,6 +600,10 @@
       container.appendChild(div);
       attachListeners();
       calculate();
+    }
+
+    function addApplianceRow() {
+      addPreset('Custom Device', 30, 1.0);
     }
 
     function removeRow(btn) {
