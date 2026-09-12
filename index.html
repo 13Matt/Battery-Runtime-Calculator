@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>12V Battery Runtime Calculator</title>
+  <title>12V Battery Runtime Calculator | 12vruntime.com</title>
+  <meta name="description" content="Calculate real-world 12V battery runtime for camping, 4WDs, and caravans with inverter losses, duty cycles, and solar break-even." />
   <style>
     :root {
       --bg: #0b1329;
@@ -87,7 +88,7 @@
       font-weight: 500;
     }
 
-    /* 16px prevents iOS Safari auto-zoom and input lock */
+    /* 16px font-size stops iOS auto-zoom and input freezes */
     input, select {
       background: var(--input-bg);
       border: 1px solid var(--border);
@@ -109,7 +110,6 @@
       gap: 10px;
     }
 
-    /* Stacked Appliance Card Design for Mobile */
     .appliance-item {
       background: #131f37;
       border: 1px solid var(--border);
@@ -196,7 +196,6 @@
     .mini-stat .lbl {
       font-size: 0.75rem;
       color: var(--text-muted);
-      text-transform: uppercase;
     }
 
     .solar-box {
@@ -207,6 +206,48 @@
       font-size: 0.9rem;
       line-height: 1.4;
       color: #e2e8f0;
+    }
+
+    /* Affiliate Product Links */
+    .gear-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .gear-link {
+      display: block;
+      background: #131f37;
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+
+    .gear-link:active {
+      border-color: var(--primary);
+    }
+
+    .gear-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--primary);
+    }
+
+    .gear-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      padding: 12px 0 24px;
+      line-height: 1.4;
     }
   </style>
 </head>
@@ -248,11 +289,10 @@
       <div class="card-title">2. Connected Loads</div>
       
       <div id="appliances-container" style="display:flex; flex-direction:column; gap:12px;">
-        
-        <!-- Default Item 1 -->
+        <!-- Default Item 1: 12V Camping Fridge -->
         <div class="appliance-item">
           <div class="appliance-top">
-            <input type="text" value="12V Fridge" placeholder="Appliance name" class="app-name" />
+            <input type="text" value="12V Camping Fridge" placeholder="Appliance name" class="app-name" />
             <button type="button" class="btn-delete" onclick="removeRow(this)">Delete</button>
           </div>
           <div class="grid-2">
@@ -271,7 +311,7 @@
           </div>
         </div>
 
-        <!-- Default Item 2 -->
+        <!-- Default Item 2: Phone / USB Charging -->
         <div class="appliance-item">
           <div class="appliance-top">
             <input type="text" value="Phone / USB Charging" placeholder="Appliance name" class="app-name" />
@@ -292,7 +332,6 @@
             </div>
           </div>
         </div>
-
       </div>
 
       <button type="button" class="btn-add" onclick="addApplianceRow()">+ Add Another Appliance</button>
@@ -323,6 +362,36 @@
         Enter loads above to see solar panel recommendations.
       </div>
     </div>
+
+    <!-- 4. RECOMMENDED GEAR (MONETIZATION) -->
+    <div class="card" style="border-color: var(--primary);">
+      <div class="card-title">Recommended Off-Grid Gear</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Tested hardware to match your battery and solar calculations:
+      </p>
+
+      <div class="gear-card">
+        <a href="https://www.amazon.com.au/s?k=12v+100ah+lifepo4+lithium+battery&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+          <div class="gear-title">&rarr; 100Ah / 200Ah LiFePO4 Lithium Batteries</div>
+          <div class="gear-desc">Grade-A cells, smart Bluetooth BMS, and 10+ year lifespan.</div>
+        </a>
+
+        <a href="https://www.amazon.com.au/s?k=200w+folding+solar+blanket+12v&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+          <div class="gear-title">&rarr; 200W Folding Solar Blankets & Panels</div>
+          <div class="gear-desc">Monocrystalline portable solar with built-in MPPT regulators.</div>
+        </a>
+
+        <a href="https://www.amazon.com.au/s?k=pure+sine+wave+inverter+12v+1000w&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+          <div class="gear-title">&rarr; Pure Sine Wave Inverters (1000W–2000W)</div>
+          <div class="gear-desc">Safe power for camping fridges, CPAP, laptops, and chargers.</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- COMPLIANCE FOOTER REQUIRED BY AMAZON -->
+    <footer>
+      12vruntime.com is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.
+    </footer>
   </div>
 
   <script>
