@@ -388,6 +388,125 @@
       </div>
     </div>
 
+    <!-- EXPANDABLE FAQ & KNOWLEDGE HUB (OPTIMIZED FOR SEO) -->
+    <div class="card" style="margin-top: 6px;">
+      <div class="card-title">Frequently Asked Questions & 12V Sizing Guide</div>
+      
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+
+        <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
+          <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+            <span>How long will a 100Ah lithium battery run a 12V camping fridge?</span>
+            <span style="color: var(--primary); font-size: 1.1rem;">+</span>
+          </summary>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+            Under standard ambient temperatures (20°C to 28°C), a typical 40L to 65L single-zone camping fridge (like an Engel, Dometic, or Bushman) draws around 40W to 50W while the compressor is actively running. Because modern fridges cycle on and off (roughly a 35% to 40% duty cycle once down to temperature), the average draw is about 15W to 18W (1.2A to 1.4A at 12.8V).<br><br>
+            On a 100Ah LiFePO4 battery (providing roughly 90Ah or ~1,150Wh of usable power), you can expect between <strong>60 and 75 hours of continuous runtime</strong> (around 2.5 to 3 full days) without any solar or alternator recharge.
+          </p>
+        </details>
+
+        <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
+          <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+            <span>What is the real difference between AGM and LiFePO4 (Lithium) capacity?</span>
+            <span style="color: var(--primary); font-size: 1.1rem;">+</span>
+          </summary>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+            The biggest trap in 12V sizing is assuming a rated 100Ah battery gives you 100Ah of power. 
+            <br><br>
+            • <strong>AGM / Lead-Acid:</strong> Should not be discharged beyond 50% Depth of Discharge (DoD) without significantly shortening cell lifespan and causing severe voltage sag under load. A 100Ah AGM only gives you <strong>50Ah of safe usable capacity</strong>.
+            <br>
+            • <strong>LiFePO4 Lithium:</strong> Can easily be discharged down to 10% remaining capacity (90% DoD) for 3,000+ cycles while maintaining a rock-steady 12.8V to 13.0V output. A 100Ah lithium battery delivers <strong>90Ah of real-world energy</strong>—almost double the usable power of an AGM battery half its weight.
+          </p>
+        </details>
+
+        <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
+          <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+            <span>How many watts of solar do I need to keep my 12V battery topped up?</span>
+            <span style="color: var(--primary); font-size: 1.1rem;">+</span>
+          </summary>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+            To calculate solar break-even, multiply your continuous hourly load by 24 hours to find your daily energy demand in watt-hours (Wh). 
+            <br><br>
+            Most sunny regions receive an average of <strong>4.5 Peak Sun Hours</strong> per day. After accounting for real-world losses (heat de-rating on solar cells, dust, panel angle, and MPPT controller efficiency—typically around 25% loss), use this rule of thumb:
+            <br><br>
+            <strong>Required Solar Watts = Daily Wh Demand ÷ (4.5 × 0.75)</strong>
+            <br><br>
+            For example, running a fridge, canopy camp lights, and phone charging (averaging 30W continuous = 720Wh/day) requires roughly a <strong>200W to 250W solar panel or folding blanket</strong> to break even off-grid indefinitely.
+          </p>
+        </details>
+
+        <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
+          <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+            <span>How much power does an inverter waste running 240V / 110V gear?</span>
+            <span style="color: var(--primary); font-size: 1.1rem;">+</span>
+          </summary>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+            Inverters convert 12V direct current into mains alternating current, but they are not 100% efficient. Quality pure sine wave inverters operate at roughly <strong>85% to 92% efficiency</strong> under normal loads. 
+            <br><br>
+            Additionally, all inverters draw an <strong>idle / tare current</strong> simply being turned on (typically 0.8A to 1.5A, or 10W to 20W). If you leave a 2,000W inverter switched on overnight without running any appliances, it will still burn roughly 15Ah to 20Ah of battery capacity just sitting on standby. Whenever possible, run devices directly from native 12V cigarette/Anderson sockets or dedicated USB-C PD outlets.
+          </p>
+        </details>
+
+        <details style="background: #131f37; border: 1px solid var(--border); border-radius: 8px; padding: 12px; cursor: pointer;">
+          <summary style="font-weight: 600; font-size: 0.9rem; color: #fff; list-style: none; display: flex; justify-content: space-between; align-items: center;">
+            <span>Can a 100Ah battery run an induction cooktop, kettle, or coffee machine?</span>
+            <span style="color: var(--primary); font-size: 1.1rem;">+</span>
+          </summary>
+          <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+            Yes, but with two important conditions:
+            <br><br>
+            1. <strong>BMS Discharge Rating:</strong> A single standard 100Ah lithium battery usually has a 100A continuous Battery Management System (BMS), meaning it can safely deliver a maximum of roughly 1,200W ($12\text{V} \times 100\text{A}$). An 1,800W induction cooktop or kettle requires a <strong>200A BMS</strong> (or two 100Ah batteries wired in parallel).
+            <br>
+            2. <strong>Short Bursts Only:</strong> High-wattage heating appliances draw huge instantaneous current (~150A), but run for short periods. Boiling a kettle for 3 minutes uses only around 7Ah to 9Ah of capacity.
+          </p>
+        </details>
+
+      </div>
+    </div>
+
+    <!-- GOOGLE STRUCTURED DATA (JSON-LD FAQ SCHEMA) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How long will a 100Ah lithium battery run a 12V camping fridge?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A standard 40L to 65L camping fridge draws about 15W to 18W on average once cycling (1.2A to 1.4A at 12.8V). On a 100Ah LiFePO4 battery (providing ~90Ah safe usable capacity), it will run continuously for 60 to 75 hours (roughly 2.5 to 3 days) without recharging."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is the difference between AGM and LiFePO4 usable capacity?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "AGM and deep-cycle lead-acid batteries can only be safely discharged to 50% Depth of Discharge, providing only 50Ah of usable energy from a 100Ah battery. LiFePO4 lithium batteries can be discharged to 90% Depth of Discharge, delivering 90Ah of usable energy without cell damage or voltage drop."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How many watts of solar do I need to keep a 12V battery charged?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Multiply daily watt-hour demand by 24 hours, then divide by (4.5 peak sun hours x 0.75 efficiency). A setup pulling an average of 30W continuous (720Wh/day) requires approximately a 200W to 250W solar panel or folding blanket to break even off-grid."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much power does an inverter waste running 240V gear?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pure sine wave inverters operate at roughly 85% to 92% efficiency under load. In addition, an idle inverter consumes 0.8A to 1.5A (10W to 20W) simply being turned on, which can drain 15Ah to 20Ah overnight if left on standby."
+          }
+        }
+      ]
+    }
+    </script>
+
+    
     <!-- COMPLIANCE FOOTER REQUIRED BY AMAZON -->
     <footer>
       12vruntime.com is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.
