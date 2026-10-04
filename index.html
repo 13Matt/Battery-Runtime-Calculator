@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>12V Battery Runtime Calculator | 12vruntime.com</title>
-  <meta name="description" content="Calculate real-world 12V battery runtime for camping, 4WDs, and caravans with inverter losses, duty cycles, and solar break-even." />
+  <title>12V Battery Runtime Calculator & Wire Sizing Tool | 12vruntime.com</title>
+  <meta name="description" content="Calculate real-world 12V battery runtime, solar panel requirements, and wire/fuse sizing for 4WDs, camping, caravans, and off-grid setups." />
   <style>
     :root {
       --bg: #0b1329;
@@ -13,6 +13,7 @@
       --border: #334155;
       --primary: #38bdf8;
       --accent: #22c55e;
+      --warning: #f59e0b;
       --text: #f8fafc;
       --text-muted: #94a3b8;
       --danger: #ef4444;
@@ -36,7 +37,7 @@
 
     .container {
       width: 100%;
-      max-width: 600px;
+      max-width: 620px;
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -48,7 +49,7 @@
     }
 
     header h1 {
-      font-size: 1.4rem;
+      font-size: 1.45rem;
       color: #fff;
     }
 
@@ -74,6 +75,18 @@
       color: var(--primary);
       border-bottom: 1px solid var(--border);
       padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .badge-tag {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 500;
     }
 
     .field {
@@ -88,7 +101,6 @@
       font-weight: 500;
     }
 
-    /* 16px font-size stops iOS auto-zoom */
     input, select {
       background: var(--input-bg);
       border: 1px solid var(--border);
@@ -110,7 +122,6 @@
       gap: 10px;
     }
 
-    /* Preset Horizontal Scroll */
     .preset-label {
       font-size: 0.75rem;
       color: var(--text-muted);
@@ -187,15 +198,14 @@
       background: transparent;
       border: 2px dashed var(--primary);
       color: var(--primary);
-      padding: 14px;
+      padding: 12px;
       border-radius: 8px;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       text-align: center;
     }
 
-    /* Results Dashboard */
     .hero-stat {
       background: #0f1c33;
       border: 1px solid var(--border);
@@ -205,7 +215,7 @@
     }
 
     .hero-val {
-      font-size: 2rem;
+      font-size: 2.1rem;
       font-weight: 700;
       color: var(--accent);
       margin-top: 4px;
@@ -256,7 +266,7 @@
     .gear-card {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 10px;
       margin-top: 4px;
     }
 
@@ -264,12 +274,13 @@
       display: block;
       background: #131f37;
       border: 1px solid var(--border);
-      padding: 12px;
+      padding: 12px 14px;
       border-radius: 8px;
       text-decoration: none;
+      transition: border-color 0.2s ease;
     }
 
-    .gear-link:active {
+    .gear-link:hover, .gear-link:active {
       border-color: var(--primary);
     }
 
@@ -283,6 +294,20 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-top: 3px;
+      line-height: 1.35;
+    }
+
+    .btn-action {
+      background: #152238;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      width: 100%;
     }
 
     footer {
@@ -298,8 +323,8 @@
 
   <div class="container">
     <header>
-      <h1>12V Battery Runtime Tool</h1>
-      <p>Instant off-grid battery endurance & solar sizing</p>
+      <h1>12V Battery Runtime & Wiring Sizing</h1>
+      <p>Instant off-grid battery endurance, solar balance & cable guides</p>
     </header>
 
     <!-- 1. BATTERY SETUP -->
@@ -309,8 +334,8 @@
       <div class="field">
         <label>Battery Chemistry</label>
         <select id="chem">
-          <option value="0.90" selected>LiFePO4 Lithium (90% usable)</option>
-          <option value="0.50">AGM / Deep Cycle (50% usable)</option>
+          <option value="0.90" selected>LiFePO4 Lithium (90% usable capacity)</option>
+          <option value="0.50">AGM / Deep Cycle (50% usable - damage risk below 50%)</option>
           <option value="0.80">Gel Battery (80% usable)</option>
         </select>
       </div>
@@ -327,26 +352,25 @@
       </div>
     </div>
 
-    <!-- 2. APPLIANCES WITH PRESETS -->
+    <!-- 2. CONNECTED LOADS -->
     <div class="card">
-      <div class="card-title">2. Connected Loads</div>
+      <div class="card-title">2. Connected Appliances & Loads</div>
 
-      <!-- Quick Preset Buttons (4WD & Touring Gear) -->
       <div style="display:flex; flex-direction:column; gap:6px;">
-        <span class="preset-label">Quick Add Presets:</span>
+        <span class="preset-label">Quick Add Touring Gear:</span>
         <div class="preset-scroll">
           <button type="button" class="btn-preset" onclick="addPreset('Diesel Heater', 35, 0.40)">+ Diesel Heater</button>
           <button type="button" class="btn-preset" onclick="addPreset('Starlink Mini', 25, 1.0)">+ Starlink Mini</button>
-          <button type="button" class="btn-preset" onclick="addPreset('12V Travel Oven', 130, 0.25)">+ 12V Travel Oven</button>
+          <button type="button" class="btn-preset" onclick="addPreset('12V Travel Oven', 130, 0.25)">+ Travel Oven</button>
           <button type="button" class="btn-preset" onclick="addPreset('Sirocco 12V Fan', 5, 0.50)">+ Sirocco Fan</button>
           <button type="button" class="btn-preset" onclick="addPreset('12V Water Pump', 60, 0.05)">+ Water Pump</button>
           <button type="button" class="btn-preset" onclick="addPreset('Canopy / Camp Lights', 20, 0.25)">+ Camp Lights</button>
-          <button type="button" class="btn-preset" onclick="addPreset('Induction / Coffee', 1500, 0.05)">+ Induction / Coffee</button>
+          <button type="button" class="btn-preset" onclick="addPreset('Induction / Coffee Maker', 1500, 0.05)">+ Induction/Coffee</button>
         </div>
       </div>
       
       <div id="appliances-container" style="display:flex; flex-direction:column; gap:12px;">
-        <!-- Default Item 1: 12V Camping Fridge -->
+        <!-- Default Item 1 -->
         <div class="appliance-item">
           <div class="appliance-top">
             <input type="text" value="12V Camping Fridge" placeholder="Appliance name" class="app-name" />
@@ -362,19 +386,19 @@
               <select class="app-duty">
                 <option value="0.05">Occasional (5%)</option>
                 <option value="0.25">Short (25%)</option>
-                <option value="0.35" selected>Cycling (35%)</option>
+                <option value="0.35" selected>Fridge Cycling (35%)</option>
                 <option value="0.40">Eco Run (40%)</option>
-                <option value="0.50">Heavy (50%)</option>
+                <option value="0.50">Heavy Load (50%)</option>
                 <option value="1.0">Always On (100%)</option>
               </select>
             </div>
           </div>
         </div>
 
-        <!-- Default Item 2: Phone / USB Charging -->
+        <!-- Default Item 2 -->
         <div class="appliance-item">
           <div class="appliance-top">
-            <input type="text" value="Phone / USB Charging" placeholder="Appliance name" class="app-name" />
+            <input type="text" value="Phone & USB Charging" placeholder="Appliance name" class="app-name" />
             <button type="button" class="btn-delete" onclick="removeRow(this)">Delete</button>
           </div>
           <div class="grid-2">
@@ -389,7 +413,7 @@
                 <option value="0.25">Short (25%)</option>
                 <option value="0.35">Cycling (35%)</option>
                 <option value="0.40">Eco Run (40%)</option>
-                <option value="0.50" selected>Half-Day (50%)</option>
+                <option value="0.50" selected>Evening Use (50%)</option>
                 <option value="1.0">Always On (100%)</option>
               </select>
             </div>
@@ -397,12 +421,12 @@
         </div>
       </div>
 
-      <button type="button" class="btn-add" onclick="addApplianceRow()">+ Add Custom Appliance</button>
+      <button type="button" class="btn-add" onclick="addApplianceRow()">+ Add Custom Load</button>
     </div>
 
     <!-- 3. RESULTS -->
     <div class="card">
-      <div class="card-title">3. Estimated Runtime</div>
+      <div class="card-title">3. Estimated Runtime & Solar Sizing</div>
 
       <div class="hero-stat">
         <div class="hero-sub" style="text-transform: uppercase;">Continuous Runtime</div>
@@ -422,36 +446,54 @@
       </div>
 
       <div class="solar-box" id="solar-advice">
-        Enter loads above to see solar panel recommendations.
+        Enter loads above to see solar requirements.
       </div>
+
+      <button type="button" class="btn-action" onclick="copySetupSummary()">📋 Copy Specs & Setup Summary</button>
     </div>
 
-    <!-- 4. RECOMMENDED GEAR (AFFILIATE MONETIZATION) -->
-    <div class="card" style="border-color: var(--primary);">
-      <div class="card-title">Recommended Off-Grid Gear</div>
+    <!-- 4. WIRING & FUSE SIZING -->
+    <div class="card">
+      <div class="card-title">
+        <span>4. Recommended Wiring & Fusing</span>
+        <span class="badge-tag">Installation Safe</span>
+      </div>
       <p style="font-size: 0.85rem; color: var(--text-muted);">
-        Tested hardware to match your battery and solar calculations:
+        Calculated for continuous draw with safety headroom across typical 3–5m DC runs:
       </p>
 
-      <div class="gear-card">
-        <a href="https://www.amazon.com.au/s?k=12v+100ah+lifepo4+lithium+battery&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
-          <div class="gear-title">&rarr; 100Ah / 200Ah LiFePO4 Lithium Batteries</div>
-          <div class="gear-desc">Grade-A cells, smart Bluetooth BMS, and 10+ year lifespan.</div>
-        </a>
+      <div class="stat-row">
+        <div class="mini-stat">
+          <div class="lbl">Main Battery Fuse</div>
+          <div class="val" id="fuse-size" style="color: var(--warning);">-- A</div>
+        </div>
+        <div class="mini-stat">
+          <div class="lbl">Minimum Cable Gauge</div>
+          <div class="val" id="cable-size" style="color: var(--primary);">--</div>
+        </div>
+      </div>
 
-        <a href="https://www.amazon.com.au/s?k=200w+folding+solar+blanket+12v&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
-          <div class="gear-title">&rarr; 200W Folding Solar Blankets & Panels</div>
-          <div class="gear-desc">Monocrystalline portable solar with built-in MPPT regulators.</div>
-        </a>
-
-        <a href="https://www.amazon.com.au/s?k=pure+sine+wave+inverter+12v+1000w&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
-          <div class="gear-title">&rarr; Pure Sine Wave Inverters (1000W–2000W)</div>
-          <div class="gear-desc">Safe power for camping fridges, laptops, travel ovens, and chargers.</div>
+      <div class="gear-card" style="margin-top: 2px;">
+        <a href="https://www.amazon.com.au/s?k=midi+fuse+holder+12v+kit&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+          <div class="gear-title">&rarr; Heavy Duty MIDI / MEGA In-line Fuse Block Kits</div>
+          <div class="gear-desc">Essential protection close to the battery terminal to protect cable runs against short circuits.</div>
         </a>
       </div>
     </div>
 
-    <!-- 5. FAQ & SEO GUIDE -->
+    <!-- 5. DYNAMIC RECOMMENDED GEAR (AFFILIATE MONETIZATION) -->
+    <div class="card" style="border-color: var(--primary);">
+      <div class="card-title">5. Tested Hardware for Your Build</div>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Dynamic hardware recommendations matched directly to your calculated load and solar needs:
+      </p>
+
+      <div class="gear-card" id="dynamic-gear-recs">
+        <!-- Live injected recommendations -->
+      </div>
+    </div>
+
+    <!-- 6. FAQ & SEO GUIDE -->
     <div class="card">
       <div class="card-title">Frequently Asked Questions & 12V Sizing Guide</div>
       
@@ -462,8 +504,8 @@
             <span style="color: var(--primary); font-size: 1.1rem;">+</span>
           </summary>
           <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            Under standard ambient temperatures (20°C to 28°C), a typical 40L to 65L single-zone camping fridge draws around 40W to 50W while cooling. Because modern fridges cycle on and off (roughly a 35% to 40% duty cycle once down to temperature), the average draw is about 15W to 18W (1.2A to 1.4A at 12.8V).<br><br>
-            On a 100Ah LiFePO4 battery (providing roughly 90Ah or ~1,150Wh of usable power), you can expect between <strong>60 and 75 hours of continuous runtime</strong> (around 2.5 to 3 full days) without solar or alternator charging.
+            Under standard conditions (20°C to 28°C), a typical 40L to 65L single-zone camping fridge draws around 40W to 50W while cooling. Because modern fridges cycle on and off (roughly a 35% duty cycle once down to temperature), the average draw is about 15W to 18W (1.2A to 1.4A at 12.8V).<br><br>
+            On a 100Ah LiFePO4 battery (providing ~90Ah or ~1,150Wh of usable power), you can expect between <strong>60 and 75 hours of continuous runtime</strong> (approx. 2.5 to 3 full days) without solar or alternator charging.
           </p>
         </details>
 
@@ -473,8 +515,8 @@
             <span style="color: var(--primary); font-size: 1.1rem;">+</span>
           </summary>
           <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            • <strong>AGM / Lead-Acid:</strong> Should not be discharged below 50% Depth of Discharge (DoD) without damaging cell life and causing voltage sag. A 100Ah AGM only delivers <strong>50Ah usable capacity</strong>.<br>
-            • <strong>LiFePO4 Lithium:</strong> Safely discharges to 10% remaining capacity (90% DoD) for thousands of cycles while maintaining steady 12.8V output. A 100Ah lithium battery delivers <strong>90Ah of usable power</strong>.
+            • <strong>AGM / Lead-Acid:</strong> Should not be discharged below 50% Depth of Discharge (DoD) without damaging cell life and causing severe voltage drop. A 100Ah AGM only delivers <strong>50Ah of usable capacity</strong>.<br>
+            • <strong>LiFePO4 Lithium:</strong> Safely discharges to 10% remaining capacity (90% DoD) for thousands of cycles while maintaining a rock-steady 12.8V–13.2V output. A 100Ah lithium battery delivers <strong>90Ah of real usable power</strong> at half the weight.
           </p>
         </details>
 
@@ -484,7 +526,7 @@
             <span style="color: var(--primary); font-size: 1.1rem;">+</span>
           </summary>
           <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            Multiply your daily continuous draw by 24 hours to find daily Wh. Divide that by (4.5 peak sun hours × 0.75 efficiency). A typical 30W continuous load draws 720Wh/day, requiring approximately a <strong>200W to 250W solar blanket or panel</strong> to break even.
+            Multiply your continuous daily draw in Wh by 24 hours. Divide that by (4.5 peak sun hours × 0.75 derating efficiency). For a typical 30W continuous touring load (720Wh/day), you require approximately a <strong>200W to 250W solar blanket or roof panel</strong> to break even.
           </p>
         </details>
 
@@ -494,7 +536,7 @@
             <span style="color: var(--primary); font-size: 1.1rem;">+</span>
           </summary>
           <p style="margin-top: 8px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
-            Pure sine wave inverters run at 85% to 92% efficiency. Idle inverters also draw 0.8A to 1.5A (10W to 20W) simply being turned on, which burns roughly 15Ah to 20Ah of battery capacity overnight if left switched on.
+            Pure sine wave inverters run at 85% to 92% efficiency under load. Idle inverters also draw 0.8A to 1.5A (10W to 20W) purely while turned on without loads, draining 15Ah to 20Ah of battery capacity overnight if left switched on.
           </p>
         </details>
       </div>
@@ -528,11 +570,13 @@
 
     <!-- COMPLIANCE FOOTER -->
     <footer>
-      12vruntime.com is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.
+      12vruntime.com is a participant in the Amazon Services LLC Associates Program and selected affiliate programs designed to provide a means for sites to earn advertising fees by linking to trusted gear.
     </footer>
   </div>
 
   <script>
+    let currentCalculation = {};
+
     function calculate() {
       const chemDod = parseFloat(document.getElementById('chem').value);
       const capacityAh = parseFloat(document.getElementById('capacity').value) || 0;
@@ -543,16 +587,19 @@
       const usableWh = totalWh * chemDod;
 
       let totalAverageWatts = 0;
+      let peakLoadWatts = 0;
       const rows = document.querySelectorAll('.appliance-item');
 
       rows.forEach(row => {
         const watts = parseFloat(row.querySelector('.app-watts').value) || 0;
         const duty = parseFloat(row.querySelector('.app-duty').value) || 1.0;
         totalAverageWatts += (watts * duty);
+        peakLoadWatts += watts;
       });
 
       const adjustedWatts = totalAverageWatts / inverterEff;
       const averageAmps = adjustedWatts / nominalVoltage;
+      const peakAmps = (peakLoadWatts / inverterEff) / nominalVoltage;
 
       const runtimeHours = adjustedWatts > 0 ? (usableWh / adjustedWatts) : 0;
       const runtimeDays = runtimeHours / 24;
@@ -568,6 +615,100 @@
       document.getElementById('solar-advice').innerHTML = adjustedWatts > 0
         ? `To run this setup indefinitely with 4.5 peak sun hours/day, you need roughly <strong>${requiredSolarWatts}W</strong> of solar panels to replace the daily <strong>${Math.round(dailyWh)} Wh</strong> draw.`
         : `Enter appliance loads above to calculate runtime and solar requirements.`;
+
+      // 4. Wiring and Fuse Sizing Logic (continuous safety margin: 125%)
+      let recommendedFuse = Math.ceil((peakAmps * 1.25) / 10) * 10;
+      if (recommendedFuse < 20 && peakAmps > 0) recommendedFuse = 20;
+      if (peakAmps === 0) recommendedFuse = 0;
+
+      let cableGauge = "8 B&S (7.7 mm²)";
+      if (peakAmps > 80) {
+        cableGauge = "0 B&S (53 mm²)";
+      } else if (peakAmps > 50) {
+        cableGauge = "2 B&S (32 mm²)";
+      } else if (peakAmps > 30) {
+        cableGauge = "6 B&S (13.5 mm²)";
+      } else if (peakAmps > 15) {
+        cableGauge = "8 B&S (7.7 mm²)";
+      } else {
+        cableGauge = "6mm Auto (4.5 mm²)";
+      }
+
+      document.getElementById('fuse-size').textContent = recommendedFuse > 0 ? `${recommendedFuse}A MIDI` : '--';
+      document.getElementById('cable-size').textContent = peakAmps > 0 ? cableGauge : '--';
+
+      // 5. Dynamic Gear Recommendations
+      renderDynamicGear(requiredSolarWatts, dailyWh, chemDod, capacityAh, peakLoadWatts);
+
+      // Save for summary copy
+      currentCalculation = {
+        capacityAh,
+        chemDod,
+        usableWh: Math.round(usableWh),
+        runtimeHours: runtimeHours.toFixed(1),
+        dailyWh: Math.round(dailyWh),
+        solarWatts: requiredSolarWatts,
+        fuse: recommendedFuse,
+        cable: cableGauge
+      };
+    }
+
+    function renderDynamicGear(solarWatts, dailyWh, chemDod, capacityAh, peakLoadWatts) {
+      const container = document.getElementById('dynamic-gear-recs');
+      let html = '';
+
+      // High priority battery upgrade if AGM selected
+      if (chemDod <= 0.5) {
+        html += `
+          <a href="https://www.amazon.com.au/s?k=12v+100ah+lifepo4+lithium+battery&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link" style="border-color: var(--warning);">
+            <div class="gear-title" style="color: var(--warning);">&rarr; Instant Upgrade: Switch to 100Ah LiFePO4 Lithium</div>
+            <div class="gear-desc">Your AGM cuts usable energy to 50%. A LiFePO4 battery drops 20kg of weight and doubles your usable capacity to 90Ah immediately.</div>
+          </a>
+        `;
+      }
+
+      // Dynamic Solar Recommendation
+      if (solarWatts > 0 && solarWatts <= 180) {
+        html += `
+          <a href="https://www.amazon.com.au/s?k=160w+folding+solar+blanket+12v&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+            <div class="gear-title">&rarr; Recommended Solar: 120W–160W Compact Solar Blanket</div>
+            <div class="gear-desc">Perfect fit for your ${Math.round(dailyWh)} Wh/day requirement. Folds small for easy packing in 4WDs and wagons.</div>
+          </a>
+        `;
+      } else if (solarWatts > 180 && solarWatts <= 350) {
+        html += `
+          <a href="https://www.amazon.com.au/s?k=200w+250w+folding+solar+blanket+mppt&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+            <div class="gear-title">&rarr; Recommended Solar: 200W–250W Monocrystalline Blanket / Panel</div>
+            <div class="gear-desc">Covers your daily ${Math.round(dailyWh)} Wh draw with headroom for overcast weather and shady camps.</div>
+          </a>
+        `;
+      } else if (solarWatts > 350) {
+        html += `
+          <a href="https://www.amazon.com.au/s?k=300w+400w+solar+panel+kit+12v+caravan&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+            <div class="gear-title">&rarr; Recommended Solar: 300W–400W Fixed Caravan / Roof Panel Kit</div>
+            <div class="gear-desc">High demand load (${Math.round(dailyWh)} Wh/day). Requires a multi-panel rooftop array paired with an MPPT controller.</div>
+          </a>
+        `;
+      }
+
+      // MPPT / Inverter Recommendation
+      if (peakLoadWatts > 800) {
+        html += `
+          <a href="https://www.amazon.com.au/s?k=pure+sine+wave+inverter+12v+2000w&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+            <div class="gear-title">&rarr; Pure Sine Wave Inverter (2000W)</div>
+            <div class="gear-desc">Required to handle high surge inductive loads (coffee machines, microwaves, travel ovens).</div>
+          </a>
+        `;
+      } else {
+        html += `
+          <a href="https://www.amazon.com.au/s?k=victron+smartsolar+mppt+75+15&tag=12vruntime-22" target="_blank" rel="sponsored noopener" class="gear-link">
+            <div class="gear-title">&rarr; Bluetooth MPPT Solar Charge Controller (Victron / Renogy)</div>
+            <div class="gear-desc">Yields up to 30% more power from your solar panels than cheap PWM controllers, with phone app monitoring.</div>
+          </a>
+        `;
+      }
+
+      container.innerHTML = html;
     }
 
     function addPreset(name, watts, duty) {
@@ -603,12 +744,28 @@
     }
 
     function addApplianceRow() {
-      addPreset('Custom Device', 30, 1.0);
+      addPreset('Custom Load', 30, 1.0);
     }
 
     function removeRow(btn) {
       btn.closest('.appliance-item').remove();
       calculate();
+    }
+
+    function copySetupSummary() {
+      if (!currentCalculation.runtimeHours) return;
+      const text = `--- 12V Off-Grid Setup Summary ---
+Battery Capacity: ${currentCalculation.capacityAh}Ah (~${currentCalculation.usableWh}Wh usable)
+Continuous Runtime: ${currentCalculation.runtimeHours} hrs
+Daily Consumption: ${currentCalculation.dailyWh} Wh/day
+Required Solar Break-Even: ${currentCalculation.solarWatts}W
+Recommended Main Fuse: ${currentCalculation.fuse}A
+Recommended Cable Gauge: ${currentCalculation.cable}
+Calculated at: 12vruntime.com`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Setup specs copied to clipboard! Paste it into your notes or shopping list.");
+      });
     }
 
     function attachListeners() {
